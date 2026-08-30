@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Murdoku Generator - Premium Story-Driven Logic Puzzles</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>🧩 Murdoku Puzzle Generator</h1>
+        <p class="tagline">Create premium story-driven logic puzzles for KDP publishing</p>
+    </header>
+
+    <nav class="tabs">
+        <button class="tab-btn active" data-tab="generate">Generate Puzzle</button>
+        <button class="tab-btn" data-tab="bulk">Bulk Generate</button>
+        <button class="tab-btn" data-tab="verify">Verify</button>
+        <button class="tab-btn" data-tab="export">Export</button>
+    </nav>
+
+    <main>
+        <!-- Single Puzzle Generation -->
+        <section id="generate" class="tab-content active">
+            <div class="panel">
+                <h2>Generate Single Puzzle</h2>
+                
+                <div class="form-group">
+                    <label for="grid-size">Grid Size:</label>
+                    <select id="grid-size">
+                        <option value="5">5×5 (Easy)</option>
+                        <option value="6" selected>6×6 (Medium)</option>
+                        <option value="7">7×7 (Hard)</option>
+                        <option value="8">8×8 (Expert)</option>
+                        <option value="9">9×9 (Master)</option>
+                        <option value="10">10×10 (Challenge)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="difficulty">Difficulty:</label>
+                    <select id="difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="expert">Expert</option>
+                        <option value="master">Master</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="story-category">Story Category:</label>
+                    <select id="story-category">
+                        <option value="mystery">Mystery</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="fantasy">Fantasy</option>
+                        <option value="business">Business</option>
+                        <option value="everyday">Everyday Life</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="custom-categories">Custom Categories (comma-separated):</label>
+                    <input type="text" id="custom-categories" placeholder="e.g., Person, Color, Pet, Food, Hobby">
+                </div>
+
+                <button id="btn-generate" class="btn-primary">Generate Puzzle</button>
+
+                <div id="puzzle-result" class="result-panel" style="display:none;">
+                    <h3>Generated Puzzle</h3>
+                    <div id="story-info"></div>
+                    <div id="puzzle-grid"></div>
+                    <div id="clues-list"></div>
+                    <div id="verification-status"></div>
+                    
+                    <div class="action-buttons">
+                        <button id="btn-export-pdf" class="btn-secondary">Export PDF</button>
+                        <button id="btn-export-png" class="btn-secondary">Export PNG</button>
+                        <button id="btn-export-json" class="btn-secondary">Export JSON</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bulk Generation -->
+        <section id="bulk" class="tab-content">
+            <div class="panel">
+                <h2>Bulk Puzzle Generation</h2>
+                
+                <div class="form-group">
+                    <label for="bulk-quantity">Number of Puzzles:</label>
+                    <input type="number" id="bulk-quantity" value="20" min="1" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="bulk-size">Grid Size:</label>
+                    <select id="bulk-size">
+                        <option value="5">5×5</option>
+                        <option value="6" selected>6×6</option>
+                        <option value="7">7×7</option>
+                        <option value="8">8×8</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bulk-difficulty">Difficulty:</label>
+                    <select id="bulk-difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bulk-category">Story Category:</label>
+                    <select id="bulk-category">
+                        <option value="mystery">Mystery</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="fantasy">Fantasy</option>
+                        <option value="business">Business</option>
+                        <option value="everyday">Everyday Life</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bulk-format">Export Format:</label>
+                    <select id="bulk-format">
+                        <option value="json">JSON</option>
+                        <option value="pdf">PDF</option>
+                    </select>
+                </div>
+
+                <button id="btn-bulk-generate" class="btn-primary">Start Bulk Generation</button>
+
+                <div id="bulk-progress" class="progress-panel" style="display:none;">
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                    <p id="progress-text">Generating puzzles...</p>
+                </div>
+
+                <div id="bulk-result" class="result-panel" style="display:none;">
+                    <h3>Bulk Generation Complete</h3>
+                    <p id="bulk-count"></p>
+                    <a id="bulk-download" class="btn-primary" href="#">Download All</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Verify Puzzle -->
+        <section id="verify" class="tab-content">
+            <div class="panel">
+                <h2>Verify Puzzle Solution</h2>
+                
+                <div class="form-group">
+                    <label for="verify-input">Paste Puzzle JSON:</label>
+                    <textarea id="verify-input" rows="10" placeholder='{"size": 5, "clues": [...], "categories": [...]}'></textarea>
+                </div>
+
+                <button id="btn-verify" class="btn-primary">Verify Puzzle</button>
+
+                <div id="verify-result" class="result-panel" style="display:none;">
+                    <h3>Verification Result</h3>
+                    <div id="verify-status"></div>
+                    <div id="verify-message"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Export -->
+        <section id="export" class="tab-content">
+            <div class="panel">
+                <h2>Export Puzzle</h2>
+                
+                <div class="form-group">
+                    <label for="export-puzzle-json">Puzzle JSON:</label>
+                    <textarea id="export-puzzle-json" rows="8" placeholder='Paste puzzle JSON here...'></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="export-story-json">Story JSON (optional):</label>
+                    <textarea id="export-story-json" rows="4" placeholder='{"title": "...", "intro": "..."}'></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="export-format">Format:</label>
+                    <select id="export-format">
+                        <option value="pdf">PDF (Print-ready)</option>
+                        <option value="png">PNG (Image)</option>
+                        <option value="svg">SVG (Vector)</option>
+                        <option value="json">JSON (Data)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="export-filename">Filename:</label>
+                    <input type="text" id="export-filename" value="my-puzzle">
+                </div>
+
+                <button id="btn-export" class="btn-primary">Export</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Murdoku Generator v1.0 - Premium Story-Driven Logic Puzzle Generator</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
